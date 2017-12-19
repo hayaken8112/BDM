@@ -14,7 +14,7 @@
 
 // strip.setPixelColor(n, red, green, blue);
 
-Adafruit_NeoPixel strip = Adafruit_NeoPixel(60, 6, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel strip = Adafruit_NeoPixel(60, 5, NEO_GRB + NEO_KHZ800);
  
 void setup() {
   strip.begin();
