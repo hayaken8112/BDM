@@ -60,17 +60,6 @@ void loop() {
   printSensorData();
 }
 
-
-  printGyro();  // Print "G: gx, gy, gz"　　　シリアルモニタ表示用フォーマット
-  printAccel(); // Print "A: ax, ay, az"
-  printMag();   // Print "M: mx, my, mz"
-  printAttitude(imu.ax, imu.ay, imu.az, -imu.my, -imu.mx, imu.mz);
-  Serial.println();
-
-
-
-  delay(PRINT_SPEED);
-}
 void printSensorData(){
   printGyro();  // Print "G: gx, gy, gz"　　　シリアルモニタ表示用フォーマット
   printAccel(); // Print "A: ax, ay, az"
