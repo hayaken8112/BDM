@@ -2,8 +2,12 @@
 #include <ESP8266WiFi.h>                      //https://github.com/esp8266/Arduino
 #include <Wire.h>                             //I2Cライブラリ
 #include <SparkFunLSM9DS1.h>                  //https://github.com/sparkfun/SparkFun_LSM9DS1_Arduino_Library
-
+#include <Adafruit_NeoPixel.h>
+#define MAX_VAL 20  // 0 to 255 for brightness
+#define DELAY_TIME 50 
+#define DELAY_TIME2 20
 #define ADAddr 0x48
+Adafruit_NeoPixel strip = Adafruit_NeoPixel(30, 0, NEO_GRB + NEO_KHZ800);
 
 //-------------------------------------------------------------------------
 float gxVal = 0;                                //ジャイロｘ軸用データーレジスタ
@@ -18,7 +22,12 @@ float mzVal = 0;                                //Mag x 用データーレジス
 float hedVal = 0;                               //Hedding 用データーレジスタ
 
 //------------------------------------------------------------------------
+float heading = 0;
+float roll = 0;
+float pitch = 0;
 
+uint8_t current_index = 0;
+uint8_t previous_index = 0;
 LSM9DS1 imu;
 
 #define LSM9DS1_M  0x1E // SPIアドレス設定 0x1C if SDO_M is LOW
@@ -52,12 +61,43 @@ void setup() {
       ;
   }
 
+  strip.begin();
+  strip.show(); // Initialize all pixels to 'off'
+
 }
 
 //-------------------------　メインループ　--------------------------------
 void loop() {
   Serial.println("loop");
   printSensorData();
+  current_index = (uint8_t)((roll + 90)/6);
+  Serial.println(current_index);
+  if (previous_index < current_index) {
+    for (uint8_t i = previous_index; i <= current_index; i++){
+      setLED(i, 3, strip.Color(MAX_VAL, 0, 0));
+      delay(30);
+    }
+  } else {
+    for (uint8_t i = previous_index; i >= current_index; i--){
+      setLED(i, 3, strip.Color(MAX_VAL, 0, 0));
+      delay(30);
+    }
+  }
+  //setLED(num, 3,strip.Color(MAX_VAL, 0, 0));
+  previous_index = current_index;
+}
+
+// n:index, m:number of LEDs (must be odd)
+void setLED(uint8_t n, uint8_t m,uint32_t color){
+  m = (m+1)/2;
+  for (uint8_t i = 0; i < strip.numPixels(); i++) {
+    if(n-m < i && i < n+m) {
+      strip.setPixelColor(i, color);
+    } else {
+      strip.setPixelColor(i, strip.Color(0,0,0));
+    }
+  }
+  strip.show();
 }
 
 void printSensorData(){
@@ -165,9 +205,9 @@ void printMag()
 //-----------------------------------------------------------------------------
 void printAttitude(float ax, float ay, float az, float mx, float my, float mz)
 {
-  float roll = atan2(ay, az);
-  float pitch = atan2(-ax, sqrt(ay * ay + az * az));
-  float heading;
+  roll = atan2(ay, az);
+  pitch = atan2(-ax, sqrt(ay * ay + az * az));
+  //float heading;
   if (my == 0)
     heading = (mx < 0) ? 180.0 : 0;
   else
