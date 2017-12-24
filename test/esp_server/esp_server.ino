@@ -40,7 +40,7 @@ float hedVal = 0;                               //Hedding 用データーレジ�
 //------------------------------------------------------------------------
 LSM9DS1 imu;
 
-#define NUM_OF_DATA 3
+#define NUM_OF_DATA 4
 
 uint8_t* packet;
 float send_data[NUM_OF_DATA];
@@ -50,7 +50,7 @@ float pitch = 0;
 
 float* rec_data;
 
-size_t packet_size = 12;
+size_t packet_size = NUM_OF_DATA * sizeof(float);
 
 #define LSM9DS1_M  0x1E // SPIアドレス設定 0x1C if SDO_M is LOW
 #define LSM9DS1_AG  0x6B // SPIアドレス設定 if SDO_AG is LOW
@@ -163,9 +163,10 @@ void loop() {
       static unsigned long last = 0;
       webSocket.loop();
       calcSensorData();
-      send_data[0] = heading;
+      send_data[0] = 4;
       send_data[1] = roll;
       send_data[2] = pitch;
+      send_data[3] = heading;
     if(abs(millis() - last) > 10) {
         packet = (uint8_t *) send_data;
         webSocket.sendBIN(0, packet,packet_size);
