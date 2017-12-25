@@ -3,11 +3,13 @@
 #include <Wire.h>                             //I2Cライブラリ
 #include <SparkFunLSM9DS1.h>                  //https://github.com/sparkfun/SparkFun_LSM9DS1_Arduino_Library
 #include <Adafruit_NeoPixel.h>
+#include <Math.h>
 #define MAX_VAL 20  // 0 to 255 for brightness
 #define DELAY_TIME 50 
 #define DELAY_TIME2 20
 #define ADAddr 0x48
-Adafruit_NeoPixel strip = Adafruit_NeoPixel(30, 0, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel mystrip = Adafruit_NeoPixel(15, 0, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel yourstrip = Adafruit_NeoPixel(15, 14, NEO_GRB + NEO_KHZ800);
 
 //-------------------------------------------------------------------------
 float gxVal = 0;                                //ジャイロｘ軸用データーレジスタ
@@ -40,6 +42,7 @@ LSM9DS1 imu;
 
 WiFiServer server(80);
 WiFiClient client;
+
 //----------------------　setup　---------------------------
 void setup() {
   Serial.begin(115200);
@@ -61,25 +64,48 @@ void setup() {
       ;
   }
 
-  strip.begin();
-  strip.show(); // Initialize all pixels to 'off'
+  mystrip.begin();
+  mystrip.show(); // Initialize all pixels to 'off'
+  yourstrip.begin();
+  yourstrip.show();
 
 }
 
 //-------------------------　メインループ　--------------------------------
-void loop() {
+void loop(){
   Serial.println("loop");
   printSensorData();
-  current_index = (uint8_t)((roll + 90)/6);
+  headLED();
+}
+
+void headLED(){
+  current_index = (uint8_t)((heading + 180)/24);
+  uint8_t distance = 0;
+  Serial.println(current_index);
+  uint8_t brightness = 0;
+  for(uint8_t i = 0; i<15; i++){
+    distance = abs(i - current_index);
+    if(distance > 7){
+      distance = 15 - distance; 
+    }
+    brightness = (7 -distance)*(7-distance);
+    mystrip.setPixelColor(i, mystrip.Color(brightness,0,0));
+  }
+  mystrip.show();
+  //previous_index = current_index;
+}
+
+void rollLED(){
+  current_index = (uint8_t)((roll + 90)/12);
   Serial.println(current_index);
   if (previous_index < current_index) {
     for (uint8_t i = previous_index; i <= current_index; i++){
-      setLED(i, 3, strip.Color(MAX_VAL, 0, 0));
+      setLED(i, 3, mystrip.Color(MAX_VAL, 0, 0));
       delay(30);
     }
   } else {
     for (uint8_t i = previous_index; i >= current_index; i--){
-      setLED(i, 3, strip.Color(MAX_VAL, 0, 0));
+      setLED(i, 3, mystrip.Color(MAX_VAL, 0, 0));
       delay(30);
     }
   }
@@ -90,14 +116,14 @@ void loop() {
 // n:index, m:number of LEDs (must be odd)
 void setLED(uint8_t n, uint8_t m,uint32_t color){
   m = (m+1)/2;
-  for (uint8_t i = 0; i < strip.numPixels(); i++) {
+  for (uint8_t i = 0; i < mystrip.numPixels(); i++) {
     if(n-m < i && i < n+m) {
-      strip.setPixelColor(i, color);
+      mystrip.setPixelColor(i, color);
     } else {
-      strip.setPixelColor(i, strip.Color(0,0,0));
+      mystrip.setPixelColor(i, mystrip.Color(0,0,0));
     }
   }
-  strip.show();
+  mystrip.show();
 }
 
 void printSensorData(){
