@@ -1,17 +1,3 @@
-
-// n:index, m:number of LEDs (must be odd)
-void setLED(uint8_t n, uint8_t m,uint32_t color){
-  m = (m+1)/2;
-  for (uint8_t i = 0; i < strip.numPixels(); i++) {
-    if(n-m < i && i < n+m) {
-      strip.setPixelColor(i, color);
-    } else {
-      strip.setPixelColor(i, strip.Color(0,0,0));
-    }
-  }
-  strip.show();
-}
-
 void calcSensorData(){
   calcGyro();
   calcAccel();
