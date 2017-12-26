@@ -11,6 +11,8 @@
 Adafruit_NeoPixel mystrip = Adafruit_NeoPixel(15, 0, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel yourstrip = Adafruit_NeoPixel(15, 14, NEO_GRB + NEO_KHZ800);
 
+uint8_t mycolor = 1;
+
 //-------------------------------------------------------------------------
 float gxVal = 0;                                //ジャイロｘ軸用データーレジスタ
 float gyVal = 0;                                //ジャイロｙ軸用データーレジスタ
@@ -89,7 +91,7 @@ void headLED(){
       distance = 15 - distance; 
     }
     brightness = (7 -distance)*(7-distance);
-    mystrip.setPixelColor(i, mystrip.Color(brightness,0,0));
+    mystrip.setPixelColor(i, myColor(brightness));
   }
   mystrip.show();
   //previous_index = current_index;
@@ -111,6 +113,23 @@ void rollLED(){
   }
   //setLED(num, 3,strip.Color(MAX_VAL, 0, 0));
   previous_index = current_index;
+}
+
+uint32_t myColor(uint8_t brightness){
+  switch(mycolor) {
+    case 0:
+      return mystrip.Color(brightness, 0, 0);
+      break;
+    case 1:
+      return mystrip.Color(0, brightness, 0);
+      break;
+    case 2:
+      return mystrip.Color(0, 0, brightness);
+      break;
+    default:
+      break;
+  }
+  
 }
 
 // n:index, m:number of LEDs (must be odd)
