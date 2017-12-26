@@ -25,6 +25,9 @@ float myVal = 0;                                //Mag ｙ 用データーレジ�
 float mzVal = 0;                                //Mag x 用データーレジスタ
 float hedVal = 0;                               //Hedding 用データーレジスタ
 
+float offset_mx = 1400;
+float offset_my = -1800;
+
 //------------------------------------------------------------------------
 float heading = 0;
 float roll = 0;
@@ -82,7 +85,7 @@ void loop(){
 }
 
 void headLED(){
-  current_index = (uint8_t)((heading + 180)/24);
+  current_index = (uint8_t)(heading/24);
   uint8_t distance = 0;
   Serial.println(current_index);
   uint8_t brightness = 0;
@@ -264,6 +267,12 @@ void printAttitude(float ax, float ay, float az, float mx, float my, float mz)
   roll = atan2(ay, az);
   pitch = atan2(-ax, sqrt(ay * ay + az * az));
   //float heading;
+  Serial.print("mx:");
+  Serial.print(mx);
+  Serial.print(" my:");
+  Serial.print(my);
+  mx -= offset_mx;
+  my -= offset_my;
   if (my == 0)
     heading = (mx < 0) ? 180.0 : 0;
   else
@@ -279,6 +288,8 @@ void printAttitude(float ax, float ay, float az, float mx, float my, float mz)
   heading *= 180.0 / PI;
   pitch *= 180.0 / PI;
   roll  *= 180.0 / PI;
+
+  if (heading < 0) heading *= -1;
 
   Serial.print("Pitch, Roll: ");
   Serial.print(pitch, 2);
