@@ -78,6 +78,7 @@ void loop(){
   Serial.println("loop");
   printSensorData();
   headLED();
+  changeColor();
 }
 
 void headLED(){
@@ -115,8 +116,9 @@ void rollLED(){
   previous_index = current_index;
 }
 
+
 uint32_t myColor(uint8_t brightness){
-  switch(mycolor) {
+  switch(mycolor % 3) {
     case 0:
       return mystrip.Color(brightness, 0, 0);
       break;
@@ -127,9 +129,18 @@ uint32_t myColor(uint8_t brightness){
       return mystrip.Color(0, 0, brightness);
       break;
     default:
+      return mystrip.Color(brightness, 0, 0);
       break;
   }
   
+}
+
+void changeColor(){
+  Serial.print(imu.calcAccel(imu.az));
+  if(imu.calcAccel(imu.az)>1.5){
+    Serial.print("changed Color\n");
+    mycolor += 1;
+  }
 }
 
 // n:index, m:number of LEDs (must be odd)
