@@ -24,3 +24,22 @@ void setLED(uint8_t n, uint8_t m, uint32_t color, bool is_me)
     }
     strip.show();
 }
+
+/*
+void headLED(){
+  current_index = (uint8_t)(heading/24);
+  uint8_t distance = 0;
+  Serial.println(current_index);
+  uint8_t brightness = 0;
+  for(uint8_t i = 0; i<15; i++){
+    distance = abs(i - current_index);
+    if(distance > 7){
+      distance = 15 - distance; 
+    }
+    brightness = (7 -distance)*(7-distance);
+    mystrip.setPixelColor(i, myColor(brightness));
+  }
+  mystrip.show();
+  //previous_index = current_index;
+}
+*/

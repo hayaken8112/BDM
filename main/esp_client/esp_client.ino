@@ -40,8 +40,13 @@ float myVal = 0;  //Mag ｙ 用データーレジスタ
 float mzVal = 0;  //Mag x 用データーレジスタ
 float hedVal = 0; //Hedding 用データーレジスタ
 
+float offset_mx = 1400;
+float offset_my = -1800;
+
 //------------------------------------------------------------------------
 LSM9DS1 imu;
+
+uint8_t current_index = 0;
 
 // ---------------------- data settings ----------------
 #define NUM_OF_DATA 4
