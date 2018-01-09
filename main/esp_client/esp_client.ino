@@ -150,6 +150,10 @@ void setup()
             ;
     }
     Serial.printf("Sensor set");
+
+    strip.begin();
+    strip.show();
+    Serial.printf("LED reset");
 }
 
 void printComData(float *data)
