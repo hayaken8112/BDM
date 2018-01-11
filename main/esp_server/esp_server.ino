@@ -57,7 +57,7 @@ float roll = 0;
 float pitch = 0;
 int mycolor = 0;
 
-float *rec_data;
+float rec_data[NUM_OF_DATA];
 
 size_t packet_size = NUM_OF_DATA * sizeof(float);
 
@@ -99,8 +99,11 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length)
         Serial.printf("[%u] get binary length: %u\n", num, length);
 
         hexdump(payload, length);
-
-        rec_data = (float *)payload;
+        float * temp = (float *)payload;
+        for (int i = 0; i < NUM_OF_DATA; i++) {
+          rec_data[i] = temp[i];
+        }
+        //rec_data = (float *)payload;
 
         // echo data back to browser
         //webSocket.sendBIN(num, payload, length);
