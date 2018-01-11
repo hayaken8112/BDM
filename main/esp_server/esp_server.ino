@@ -7,15 +7,15 @@
 
 // ----------------- WiFi settings -------------------
 //IP
-IPAddress ip(192, 168, 11, 31);
-IPAddress gateway(192, 168, 11, 1);
+IPAddress ip(192, 168, 179, 6);
+IPAddress gateway(192, 168, 179, 1);
 IPAddress subnet(255, 255, 255, 0);
-IPAddress DNS(192, 168, 11, 1);
+IPAddress DNS(192, 168, 179, 1);
 int port = 81;
 
 //ssid, pass
-const char *ssid = "Buffalo-G-95F5";
-const char *password = "bnhcsau8trtk3";
+const char *ssid = "wx03-442ee6";
+const char *password = "1792757abf1f9";
 
 WebSocketsServer webSocket = WebSocketsServer(port);
 

@@ -7,12 +7,12 @@
 
 // ----------------- WiFi settings -------------------
 //IP
-const char *Server_ip("192.168.11.31");
+const char *Server_ip("192.168.179.6");
 int port = 81;
 
 //ssid, pass
-const char *ssid = "Buffalo-G-95F5";
-const char *password = "bnhcsau8trtk3";
+const char *ssid = "wx03-442ee6";
+const char *password = "1792757abf1f9";
 
 WebSocketsClient webSocket;
 
