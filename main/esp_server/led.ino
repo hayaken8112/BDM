@@ -1,5 +1,10 @@
 void setLED_roll(float *data, uint32_t color, bool is_me)
 {
+    if (is_me) {
+      color = getColor(mycolor);
+    } else {
+        color = getColor((int)data[3]);
+    }
     uint8_t index = (uint8_t)((data[1] + 90) / 12);
     setLED(index, 3, color, is_me);
 }
@@ -23,6 +28,32 @@ void setLED(uint8_t n, uint8_t m, uint32_t color, bool is_me)
         }
     }
     strip.show();
+}
+
+void changeColor(){
+  Serial.print(imu.calcAccel(imu.az));
+  if(imu.calcAccel(imu.az)>1.5){
+    Serial.print("changed Color\n");
+    mycolor += 1;
+    mycolor = mycolor % 3;
+  }
+}
+
+uint32_t getColor(int color_num){
+  switch(color_num % 3) {
+    case 0:
+      return color1;
+      break;
+    case 1:
+      return color2;
+      break;
+    case 2:
+      return color3;
+      break;
+    default:
+      return color1;
+      break;
+  }
 }
 
 /*

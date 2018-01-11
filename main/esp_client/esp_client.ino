@@ -24,8 +24,9 @@ WebSocketsClient webSocket;
 
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(30, 0, NEO_GRB + NEO_KHZ800);
 
-uint32_t color1 = strip.Color(MAX_VAL, 0, 0);
-uint32_t color2 = strip.Color(0, MAX_VAL, 0);
+uint32_t color1 = strip.Color(MAX_VAL, 0, 0); // red
+uint32_t color2 = strip.Color(0, MAX_VAL, 0); // green
+uint32_t color3 = strip.Color(0,0,MAX_VAL); // brue
 
 // ------------------- sensor settings ---------------
 //-------------------------------------------------------------------------
@@ -56,6 +57,7 @@ float send_data[NUM_OF_DATA];
 float heading = 0;
 float roll = 0;
 float pitch = 0;
+int mycolor = 0;
 
 float *rec_data;
 
@@ -176,7 +178,8 @@ void loop()
     send_data[0] = 3;
     send_data[1] = roll;
     send_data[2] = pitch;
-    send_data[3] = heading;
+    //send_data[3] = heading;
+    send_data[3] = (float)mycolor;
     if (abs(millis() - last) > 10)
     {
         packet = (uint8_t *)send_data;
@@ -192,4 +195,5 @@ void loop()
         printComData(rec_data);
         setLED_roll(rec_data, color2, false);
     }
+    changeColor();
 }
